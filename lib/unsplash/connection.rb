@@ -22,7 +22,7 @@ module Unsplash #:nodoc:
       @application_secret = Unsplash.configuration.application_secret
       @api_version        = version
       @api_base_uri       = api_base_uri
-      
+
       oauth_base_uri     = oauth_base_uri
       @oauth = ::OAuth2::Client.new(@application_id, @application_secret, site: oauth_base_uri) do |http|
         http.request :multipart
@@ -47,6 +47,13 @@ module Unsplash #:nodoc:
     def authorize!(auth_code)
       @oauth_token = @oauth.auth_code.get_token(auth_code, redirect_uri: Unsplash.configuration.application_redirect_uri)
       # TODO check if it succeeded
+    end
+
+    # Set OAuthe access token obtained in different manner (i.e. in
+    # web flow.
+    # @param token [String] The OAuth access_token.
+    def set_token!(access_token)
+      @oauth_token = access_token
     end
 
     # Perform a GET request.
@@ -92,7 +99,7 @@ module Unsplash #:nodoc:
 
         param_key = verb == :post ? :body : :params
         @oauth_token.public_send(verb,  @api_base_uri + path, param_key => params, headers: headers)
-      
+
       else
         self.class.public_send verb, path, query: params, headers: public_auth_header
       end
