@@ -81,7 +81,7 @@ module Unsplash # :nodoc:
       def search(query, page = 1, per_page = 30)
         params = {
           query:    query,
-          page:     page
+          page:     page,
           per_page: per_page
         }
         Unsplash::Search.search("/search/photos", self, params)
