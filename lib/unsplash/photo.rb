@@ -1,3 +1,4 @@
+# coding: utf-8
 module Unsplash # :nodoc:
 
   # Unsplash Photo operations.
@@ -62,7 +63,7 @@ module Unsplash # :nodoc:
         if count
           params[:count] = count
           photos = parse_list connection.get("/photos/random/", params).body
-          photos.map { |photo| 
+          photos.map { |photo|
             photo.user = Unsplash::User.new photo[:user]
             photo
           }
@@ -76,10 +77,12 @@ module Unsplash # :nodoc:
       # Search for photos by keyword.
       # @param query [String] Keywords to search for.
       # @param page  [Integer] Which page of search results to return.
-      def search(query, page = 1)
+      # @param per_page [Integer] The number of search results per page.
+      def search(query, page = 1, per_page = 30)
         params = {
           query:    query,
           page:     page
+          per_page: per_page
         }
         Unsplash::Search.search("/search/photos", self, params)
       end
